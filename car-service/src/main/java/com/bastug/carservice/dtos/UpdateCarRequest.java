@@ -1,5 +1,6 @@
 package com.bastug.carservice.dtos;
 
+import com.bastug.carservice.entity.ImageUrl;
 import com.bastug.carservice.enums.CarColor;
 import com.bastug.carservice.enums.FuelType;
 import com.bastug.carservice.enums.TransmissionType;
@@ -9,6 +10,9 @@ import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -35,5 +39,6 @@ public class UpdateCarRequest {
     private TransmissionType transmissionType;
     private FuelType fuelType;
     private Long customerId;
+    private List<ImageUrl> imageUrls=new ArrayList<>();
 }
 

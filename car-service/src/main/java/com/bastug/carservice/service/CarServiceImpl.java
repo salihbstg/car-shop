@@ -5,6 +5,7 @@ import com.bastug.carservice.dtos.CreateCarRequest;
 import com.bastug.carservice.dtos.CustomerResponse;
 import com.bastug.carservice.dtos.UpdateCarRequest;
 import com.bastug.carservice.entity.Car;
+import com.bastug.carservice.entity.ImageUrl;
 import com.bastug.carservice.enums.FuelType;
 import com.bastug.carservice.exception.CarNotFoundException;
 import com.bastug.carservice.exception.DuplicatePlateException;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,19 +37,34 @@ public class CarServiceImpl implements CarService {
         }
         CustomerResponse customer=customerClient.getCustomerByToken(token);
         Car car=carMapper.toCar(createCarRequest);
+        List<ImageUrl> imageUrls=new ArrayList<>();
+        for(String url:createCarRequest.getImageUrls()){
+            ImageUrl imageUrl=new ImageUrl();
+            imageUrl.setImageUrl(url);
+            imageUrl.setCar(car);
+            imageUrls.add(imageUrl);
+        }
+        car.setImageUrls(imageUrls);
         car.setCustomerId(customer.getId());
         carRepository.save(car);
         CarResponse carResponse= carMapper.toCarResponse(car);
+        carResponse.setImageUrls(createCarRequest.getImageUrls());
         carResponse.setCustomerResponse(customer);
         return carResponse;
     }
 
     @Override
     public Page<CarResponse> getAllCars(Pageable pageable) {
+
         return carRepository.findAll(pageable)
                 .map(car->{
+                    List<String> urls=new ArrayList<>();
                     CarResponse carResponse=carMapper.toCarResponse(car);
                     carResponse.setCustomerResponse(customerClient.getCustomer(car.getCustomerId()));
+                    for(ImageUrl url:car.getImageUrls()){
+                        urls.add(url.getImageUrl());
+                    }
+                    carResponse.setImageUrls(urls);
                     return carResponse;
                 });
     }
@@ -74,8 +91,14 @@ public class CarServiceImpl implements CarService {
     @Override
     public CarResponse getCarById(Long id) {
         Optional<Car> optionalCar = carRepository.findById(id);
+
         return optionalCar.map((car)->{
+            List<String> urls=new ArrayList<>();
             CarResponse carResponse=carMapper.toCarResponse(car);
+            for(ImageUrl url:car.getImageUrls()){
+                urls.add(url.getImageUrl());
+            }
+            carResponse.setImageUrls(urls);
             carResponse.setCustomerResponse(customerClient.getCustomer(car.getCustomerId()));
             return carResponse;
         }).orElseThrow(()-> new CarNotFoundException(id));
@@ -84,7 +107,12 @@ public class CarServiceImpl implements CarService {
     @Override
     public Page<CarResponse> getCarsByBrand(String brand, Pageable pageable) {
         return carRepository.findByBrandContainingIgnoreCase(brand,pageable).map(car->{
+            List<String> urls=new ArrayList<>();
             CarResponse carResponse=carMapper.toCarResponse(car);
+            for(ImageUrl url:car.getImageUrls()){
+                urls.add(url.getImageUrl());
+            }
+            carResponse.setImageUrls(urls);
             carResponse.setCustomerResponse(customerClient.getCustomer(car.getCustomerId()));
             return carResponse;
         });
@@ -93,7 +121,12 @@ public class CarServiceImpl implements CarService {
     @Override
     public Page<CarResponse> getCarsByFuelType(FuelType fuelType, Pageable pageable) {
         return carRepository.findByFuelType(fuelType,pageable).map(car->{
+            List<String> urls=new ArrayList<>();
             CarResponse carResponse=carMapper.toCarResponse(car);
+            for(ImageUrl url:car.getImageUrls()){
+                urls.add(url.getImageUrl());
+            }
+            carResponse.setImageUrls(urls);
             carResponse.setCustomerResponse(customerClient.getCustomer(car.getCustomerId()));
             return carResponse;
         });
@@ -102,7 +135,12 @@ public class CarServiceImpl implements CarService {
     @Override
     public Page<CarResponse> getCarsByBrandAndFuelType(FuelType fuelType, String brand, Pageable pageable) {
         return carRepository.findByFuelTypeAndBrandContainingIgnoreCase(fuelType,brand,pageable).map(car->{
+            List<String> urls=new ArrayList<>();
+            for(ImageUrl url:car.getImageUrls()){
+                urls.add(url.getImageUrl());
+            }
             CarResponse carResponse=carMapper.toCarResponse(car);
+            carResponse.setImageUrls(urls);
             carResponse.setCustomerResponse(customerClient.getCustomer(car.getCustomerId()));
             return carResponse;
         });
@@ -113,7 +151,13 @@ public class CarServiceImpl implements CarService {
         List<Car> cars=carRepository.findByCustomerId(id);
         List<CarResponse> carResponses=new ArrayList<>();
         for(Car car:cars){
-            carResponses.add(carMapper.toCarResponse(car));
+            List<String> urls=new ArrayList<>();
+            for(ImageUrl imageUrl:car.getImageUrls()){
+                urls.add(imageUrl.getImageUrl());
+            }
+            CarResponse carResponse=carMapper.toCarResponse(car);
+            carResponse.setImageUrls(urls);
+            carResponses.add(carResponse);
         }
         return carResponses;
     }

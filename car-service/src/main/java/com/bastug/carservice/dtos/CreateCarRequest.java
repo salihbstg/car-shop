@@ -1,5 +1,6 @@
 package com.bastug.carservice.dtos;
 
+import com.bastug.carservice.entity.ImageUrl;
 import com.bastug.carservice.enums.CarColor;
 import com.bastug.carservice.enums.FuelType;
 import com.bastug.carservice.enums.TransmissionType;
@@ -7,6 +8,9 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -32,4 +36,6 @@ public class CreateCarRequest {
     private TransmissionType transmissionType;
     @NotNull(message = "Yakıt seçimi yapınız!")
     private FuelType fuelType;
+
+    private List<String> imageUrls=new ArrayList<>();
 }

@@ -5,6 +5,8 @@ import com.bastug.carservice.dtos.CreateCarRequest;
 import com.bastug.carservice.dtos.UpdateCarRequest;
 import com.bastug.carservice.entity.Car;
 import org.mapstruct.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring")
 public interface CarMapper {

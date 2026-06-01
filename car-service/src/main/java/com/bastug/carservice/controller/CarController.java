@@ -21,8 +21,10 @@ import java.util.List;
 public class CarController {
     private final CarService carService;
 
+
     @PostMapping
     public ResponseEntity<CarResponse> createCar(@Valid @RequestBody CreateCarRequest createCarRequest,@RequestHeader("Authorization") String token) {
+        System.out.println("Gel all caars");
         return ResponseEntity.status(HttpStatus.CREATED).body(carService.createCar(createCarRequest,token));
     }
     @GetMapping

@@ -8,6 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -33,4 +36,11 @@ public class Car {
 
     @Column(nullable = false)
     private Long customerId;
+
+    @OneToMany(
+            mappedBy = "car",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    List<ImageUrl> imageUrls=new ArrayList<>();
 }
