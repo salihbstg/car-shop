@@ -12,11 +12,14 @@ import org.springframework.stereotype.Component;
 public interface CarMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "customerId",ignore = true)
+    @Mapping(target = "imageUrls",ignore = true)
     Car toCar(CreateCarRequest createCarRequest);
 
+    @Mapping(target = "imageUrls",ignore = true)
     CarResponse toCarResponse(Car save);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "imageUrls",ignore = true)
     void updateCar(UpdateCarRequest updateCarRequest,@MappingTarget Car car);
 }

@@ -20,6 +20,10 @@ public class GatewayConfig {
                         r->r.path("/api/v1/customers/**")
                         .uri("http://localhost:8081")
                 )
+                .route("media-service",
+                        r->r.path("/api/media/**")
+                                .uri("http://localhost:8083")
+                )
                 .build();
     }
 }
