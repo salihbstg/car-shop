@@ -150,6 +150,7 @@ public class CarServiceImpl implements CarService {
     public List<CarResponse> getCarsByCustomerId(Long id) {
         List<Car> cars=carRepository.findByCustomerId(id);
         List<CarResponse> carResponses=new ArrayList<>();
+        CustomerResponse customerResponse=customerClient.getCustomer(id);
         for(Car car:cars){
             List<String> urls=new ArrayList<>();
             for(ImageUrl imageUrl:car.getImageUrls()){
@@ -157,6 +158,7 @@ public class CarServiceImpl implements CarService {
             }
             CarResponse carResponse=carMapper.toCarResponse(car);
             carResponse.setImageUrls(urls);
+            carResponse.setCustomerResponse(customerResponse);
             carResponses.add(carResponse);
         }
         return carResponses;
