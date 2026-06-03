@@ -1,9 +1,6 @@
 package com.bastug.authservice.auth.controller;
 
-import com.bastug.authservice.auth.dto.LoginResponse;
-import com.bastug.authservice.auth.dto.RegisterResponse;
-import com.bastug.authservice.auth.dto.LoginRequest;
-import com.bastug.authservice.auth.dto.RegisterRequest;
+import com.bastug.authservice.auth.dto.*;
 import com.bastug.authservice.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,5 +21,10 @@ public class AuthController {
     @PostMapping("/login")
     ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest){
         return ResponseEntity.ok(userService.login(loginRequest));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<LoginResponse> refreshToken(@RequestBody @Valid RefreshTokenRequest refreshTokenRequest){
+        return ResponseEntity.ok(userService.refreshToken(refreshTokenRequest));
     }
 }

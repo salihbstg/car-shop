@@ -20,14 +20,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> userNotFoundException(
             UserNotFoundException ex
     ) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<String> badCredentialsException(
             BadCredentialsException ex
     ) {
-        return ResponseEntity.status(403).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
 
     @ExceptionHandler(PhoneAlreadyExistsException.class)
@@ -41,5 +41,17 @@ public class GlobalExceptionHandler {
             UsernameAlreadyExistsException usernameAlreadyExistsException
     ){
         return ResponseEntity.badRequest().body(usernameAlreadyExistsException.getMessage());
+    }
+    @ExceptionHandler(TokenIsNotRefreshException.class)
+    public ResponseEntity<String> tokenIsNotRefreshException(
+            TokenIsNotRefreshException ex
+    ){
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+    @ExceptionHandler(ExpiredTokenException.class)
+    public ResponseEntity<String> expiredTokenException(
+            ExpiredTokenException ex
+    ){
+        return ResponseEntity.badRequest().body(ex.getMessage());
     }
 }
